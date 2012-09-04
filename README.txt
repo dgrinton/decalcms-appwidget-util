@@ -45,3 +45,7 @@ returns true/false to indicate if $email was a valid email address
 encodeUrlName($name)
 encode a page name for use as a /page/xxxx url
 returns a string
+
+buildQueryString($fields)
+takes an assoc array of $param_name => $param_value and returns a urlencoded
+string eg something=whatever&this=that
