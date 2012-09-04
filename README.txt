@@ -2,7 +2,7 @@ These are utility functions for use with the DecalCMS API (http://decalcms.com/)
 
 Usage examples: https://github.com/dgrinton/decalcms-appwidget-util/blob/master/examples.md
 
-Function reference: https://github.com/dgrinton/decalcms-appwidget-util/blob/master/functions.txt
+Function reference: https://github.com/dgrinton/decalcms-appwidget-util/blob/master/functions.md
 
 Decal API reference: https://docs.google.com/spreadsheet/ccc?key=0AkqTBI--vTSXdHhJV1BneTBrTUdnemhlakVDSlJTSHc#gid=0
 
