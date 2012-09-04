@@ -154,7 +154,10 @@
         return $xpath->query('//page');
     }
 
-    function fetchPage($title) {
+    function fetchPage($title='') {
+        if(!$title) {
+            $title = $_GET['page_title'];
+        }
         $c = WsAppWidgetUtil::makeACurl();
         $fields = array(
             'p'=>$title,
