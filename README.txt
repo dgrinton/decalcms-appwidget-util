@@ -1,51 +1,42 @@
-makeACurl()
-returns a curl object (as created by curl_init) pointing to the API endpoint, still needs to have POST parameters added to specify what to retrieve
+These are utility functions for use with the DecalCMS API (http://decalcms.com/)
 
-stripSize($str)
-removes one size specification from an image URL eg myimage-100x200.jpg becomes myimage.jpg
-does nothing if no size specification exists
-returns string
+Usage examples: https://github.com/dgrinton/decalcms-appwidget-util/blob/master/examples.md
 
-buildSizedUrl($str, $w, $h)
-strips a size (if there was one) and adds a size spec of $w x $h
-eg: buildSizedUrl('myimage-100x200.jpg', 200, 400) returns 'myimage-200x400.jpg'
-returns string
+Function reference: https://github.com/dgrinton/decalcms-appwidget-util/blob/master/functions.txt
 
-escapeScripts($str)
-$str should be a HTML snippet
-adds CDATA sections to scripts in $str so that it can be parsed as XML
-returns string
+Decal API reference: https://docs.google.com/spreadsheet/ccc?key=0AkqTBI--vTSXdHhJV1BneTBrTUdnemhlakVDSlJTSHc#gid=0
 
-renderArea($page,$name)
-render area $name from $page, or all areas if $name not supplied
-handles contig start/end blocks
-returns a string
+Essentially, the workflow is this:
+    
+    <?php
+        require('util.php');
+        $c = makeACurl();
+        $args = array(); //build an associative array using Decal API parameters here
+        curl_setopt($c, CURLOPT_POSTFIELDS, buildQueryString($args));
+        $data = curl_exec($c);
+        //now $data is a string of XML that can be parsed with DomDocument or
+        //simplexml etc
+    ?>
 
-clear($node)
-removes children of the node
-returns nothing
+A Decal AppWidget will be called in the context of a page in the DecalCMS site.
 
-setText($node, $text)
-clears node and adds a textnode with $text
-returns nothing
+The widget will be passed in GET:
+page_title - the name of the current page
+dcl_logged_in - if the viewer of the page is logged in
+hostname - the hostname of the site calling the widget
+api_key - the Decal API key of the site calling the widget
 
-getTags()
-returns domnodelist of tags in use by the site
+And in POST:
+data - the entire contents of the <html> node as rendered by the site
 
-getTagged($tags, $args)
-$args is optional, if supplied should be an assoc array with key 'template' which specifies a template to restrict search to
-returns domnodelist of pages tagged with $tags
+The standard mode of operation for a widget is to make some modification to the
+POSTed data and then output it again. It can also discard the POSTed data
+entirely and output something else.
 
-fetchPage($title)
-returns domelement of page with $title
+If a widget sends a header:
+    x-decalcms-standalone: true
+then what the widget returns will be the final output to the browser.
 
-validateEmail($email)
-returns true/false to indicate if $email was a valid email address
-
-encodeUrlName($name)
-encode a page name for use as a /page/xxxx url
-returns a string
-
-buildQueryString($fields)
-takes an assoc array of $param_name => $param_value and returns a urlencoded
-string eg something=whatever&this=that
+If a widget sends a header:
+    x-decalcms-keepheaders: true
+then the headers output by the widget will be forwarded to the browser.
